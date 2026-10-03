@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KSR | Elite Suite</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@600;800&family=Montserrat:wght@900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050608;
+            --glass: rgba(14, 18, 27, 0.45);
+            --glass-card: rgba(18, 23, 36, 0.55);
+            --glass-card-hover: rgba(24, 31, 48, 0.7);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(56, 189, 248, 0.25);
+            --primary: #3b82f6;
+            --accent: #38bdf8;
+            --green: #10b981;
+            --red: #f43f5e;
+            --amber: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #8492a6;
+            --mono: 'JetBrains Mono', monospace;
+            --radius-outer: 22px;
+            --radius-inner: 14px;
+            --trans: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 24px 16px 80px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .ambient-glow {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+            background: 
+                radial-gradient(circle at 20% 15%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 80% 85%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(20, 24, 38, 0.5) 0%, transparent 60%);
+        }
+
+        .watermark-ksr {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Montserrat', sans-serif;
+            font-size: clamp(14rem, 30vw, 36rem);
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.015);
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, transparent 80%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: clamp(10px, 3vw, 25px);
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+            line-height: 1;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            transition: var(--trans);
+        }
+
+        body.mobile-mode .container {
+            max-width: 480px;
+        }
+
+        body.mobile-mode .grid-box {
+            grid-template-columns: 1fr !important;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: var(--glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-outer);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.7);
+            margin-bottom: 22px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(56, 189, 248, 0.1));
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.3rem;
+            color: #fff;
+            box-shadow: inset 0 0 12px rgba(56, 189, 248, 0.2);
+        }
+
+        .brand-title {
+            font-size: 1.35rem;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+
+        .brand-tag {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-pill {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-glass);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--trans);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-pill:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .user-tag {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid var(--accent);
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            text-decoration: none;
+            font-family: var(--mono);
+            transition: var(--trans);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
+        }
+
+        .user-tag:hover {
+            background: var(--accent);
+            color: #050608;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            background: var(--glass);
+            border: 1px solid var(--border-glass);
+            padding: 8px;
+            border-radius: var(--radius-outer);
+            margin-bottom: 22px;
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 140px;
+            padding: 12px 18px;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-inner);
+            color: var(--text-muted);
+            font-weight: 800;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: var(--trans);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .tab.active {
+            background: var(--glass-card-hover);
+            color: #fff;
+            border: 1px solid var(--border-glow);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: block;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .grid-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 820px) {
+            .grid-box {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .glass-card {
+            background: var(--glass-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-outer);
+            padding: 24px;
+            backdrop-filter: blur(32px);
+            -webkit-backdrop-filter: blur(32px);
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.6);
+            transition: var(--trans);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.16);
+            transform: translateY(-3px);
+            background: var(--glass-card-hover);
+        }
+
+        .card-head {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            background: rgba(8, 11, 18, 0.65);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-inner);
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 0.92rem;
+            outline: none;
+            transition: var(--trans);
+        }
+
+        .token-field {
+            font-family: var(--mono);
+            font-size: 0.82rem !important;
+            padding-left: 45px !important;
+        }
+
+        .eye-btn {
+            position: absolute;
+            left: 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px;
+            font-size: 1rem;
+            transition: var(--trans);
+        }
+
+        .eye-btn:hover {
+            color: #fff;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--accent);
+            background: rgba(12, 16, 26, 0.9);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+        }
+
+        .row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .toggle-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(8, 11, 18, 0.45);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-inner);
+            margin-bottom: 14px;
+            transition: var(--trans);
+        }
+
+        .toggle-card:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .toggle-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.1);
+            transition: .25s ease;
+            border-radius: 99px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: #fff;
+            transition: .25s ease;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: var(--accent);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+            background: #050608;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 13px;
+            border-radius: var(--radius-inner);
+            font-size: 0.95rem;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            transition: var(--trans);
+            margin-bottom: 12px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-cyan {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #050608;
+        }
+
+        .btn-blue {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid var(--primary);
+            color: #fff;
+        }
+
+        .btn-blue:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-red {
+            background: rgba(244, 63, 94, 0.12);
+            border: 1px solid rgba(244, 63, 94, 0.35);
+            color: var(--red);
+        }
+
+        .btn-red:hover {
+            background: var(--red);
+            color: #fff;
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-glass);
+            color: var(--text-main);
+        }
+
+        .btn-ghost:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-fetch {
+            width: auto;
+            padding: 0 16px;
+            margin: 0;
+            white-space: nowrap;
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-size: 0.82rem;
+            height: 46px;
+        }
+
+        .btn-fetch:hover {
+            background: var(--accent);
+            color: #050608;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .stat-box {
+            background: rgba(8, 11, 18, 0.6);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-inner);
+            padding: 12px 6px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .stat-val {
+            font-family: var(--mono);
+            font-size: 1.45rem;
+            font-weight: 800;
+            margin-top: 4px;
+        }
+
+        .c-green { color: var(--green); text-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+        .c-red { color: var(--red); text-shadow: 0 0 10px rgba(244, 63, 94, 0.3); }
+        .c-amber { color: var(--amber); text-shadow: 0 0 10px rgba(245, 158, 11, 0.3); }
+        .c-cyan { color: var(--accent); text-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
+
+        .patterns-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 16px;
+            max-height: 220px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .pat-chip {
+            background: rgba(8, 11, 18, 0.6);
+            border: 1px solid var(--border-glass);
+            padding: 10px 12px;
+            border-radius: var(--radius-inner);
+            font-size: 0.8rem;
+            font-family: var(--mono);
+            cursor: pointer;
+            transition: var(--trans);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            user-select: none;
+        }
+
+        .pat-chip:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .pat-chip.active {
+            background: rgba(56, 189, 248, 0.12);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .pat-chip .chk {
+            width: 16px;
+            height: 16px;
+            border-radius: 5px;
+            border: 1px solid var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .pat-chip.active .chk {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #050608;
+            font-weight: 900;
+        }
+
+        .console-term {
+            background: #040508;
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-inner);
+            padding: 14px;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            height: 175px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .log-line {
+            color: var(--text-muted);
+            word-break: break-all;
+        }
+
+        .log-hit { color: var(--green); font-weight: 700; }
+        .log-bad { color: #475569; }
+        .log-rate { color: var(--amber); }
+
+        .hits-pool {
+            background: rgba(16, 185, 129, 0.06);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            border-radius: var(--radius-inner);
+            padding: 12px;
+            max-height: 95px;
+            overflow-y: auto;
+            margin-top: 12px;
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            color: var(--green);
+        }
+
+        .copy-hits-btn {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--green);
+            color: var(--green);
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: var(--trans);
+        }
+
+        .copy-hits-btn:hover {
+            background: var(--green);
+            color: #050608;
+        }
+
+        footer {
+            margin-top: 45px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border-glass);
+            padding-top: 22px;
+            position: relative;
+            z-index: 1;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 800;
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--glass-card-hover);
+            border: 1px solid var(--border-glow);
+            padding: 12px 20px;
+            border-radius: var(--radius-inner);
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 800;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--trans);
+            z-index: 9999;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        #toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="desktop-mode">
+
+<div class="ambient-glow"></div>
+<div class="watermark-ksr">KSR</div>
+
+<div class="container">
+    <header>
+        <div class="brand">
+            <div class="brand-logo">K</div>
+            <div>
+                <div class="brand-title">KSR SUITE</div>
+                <div class="brand-tag">لوحة تحكم ديسكورد وصيد اليوزرات</div>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button class="btn-pill" onclick="toggleLang()">
+                <span>🌐</span>
+                <span id="lang-btn-txt">EN</span>
+            </button>
+            <button class="btn-pill" onclick="toggleView()">
+                <span id="view-icon">📱</span>
+                <span id="view-txt">شاشة جوال</span>
+            </button>
+            <a href="https://www.tiktok.com/@ksrf" target="_blank" rel="noopener noreferrer" class="user-tag">
+                @ksrf
+            </a>
+        </div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab active" onclick="switchPanel('selfbot', this)">
+            <span>👤</span> <span>الحساب الشخصي</span>
+        </button>
+        <button class="tab" onclick="switchPanel('hunter', this)">
+            <span>🔍</span> <span>فحص وصيد اليوزرات</span>
+        </button>
+        <button class="tab" onclick="switchPanel('bot', this)">
+            <span>🤖</span> <span>تحكم البوت</span>
+        </button>
+    </div>
+
+    <!-- 1. SELFBOT -->
+    <div id="panel-selfbot" class="panel active">
+        <div class="grid-box">
+            <div class="glass-card">
+                <div class="card-head">
+                    <span>بيانات الحسابات والسيرفر</span>
+                </div>
+
+                <div class="field">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <label style="margin:0;">توكنات الحسابات (افصل بمسافة أو سطر جديد):</label>
+                        <button type="button" class="eye-btn" style="position:static;" onclick="toggleVisMulti('sb-tokens', this)">إخفاء التوكنات 👁️</button>
+                    </div>
+                    <textarea id="sb-tokens" rows="3" placeholder="حط توكن أو أكثر هنا" class="token-field"></textarea>
+                </div>
+
+                <div class="field">
+                    <label>اختيار أو إدخال السيرفر:</label>
+                    <div class="input-group">
+                        <input type="text" id="sb-guild" placeholder="Server ID">
+                        <button type="button" class="btn btn-fetch" onclick="fetchGuilds('selfbot')">🌐 جلب السيرفرات</button>
+                    </div>
+                    <select id="sb-guilds-select" style="display:none; margin-top:8px;" onchange="document.getElementById('sb-guild').value = this.value">
+                        <option value="">-- اختر السيرفر من القائمة --</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>محتوى الرسالة:</label>
+                    <textarea id="sb-msg" rows="3">KSR ON TOP</textarea>
+                </div>
+
+                <div class="row-2">
+                    <div class="field">
+                        <label>التكرار لكل روم:</label>
+                        <input type="number" id="sb-repeat" value="5" min="1">
+                    </div>
+                    <div class="field">
+                        <label>التأخير (ثواني):</label>
+                        <input type="number" id="sb-delay" value="0.0" step="0.1" min="0">
+                    </div>
+                </div>
+
+                <div class="toggle-card">
+                    <span class="toggle-title">تيربو (أقصى سرعة):</span>
+                    <label class="switch">
+                        <input type="checkbox" id="sb-turbo" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-card">
+                    <span class="toggle-title">منشن الكل (@everyone):</span>
+                    <label class="switch">
+                        <input type="checkbox" id="sb-mention">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div class="card-head">
+                    <span>التحكم والرومات</span>
+                </div>
+
+                <div class="row-2">
+                    <div class="field">
+                        <label>اسم الروم الأساسي:</label>
+                        <input type="text" id="sb-prefix" value="ksr-room">
+                    </div>
+                    <div class="field">
+                        <label>العدد:</label>
+                        <input type="number" id="sb-count" value="5" min="1">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>نوع الروم:</label>
+                    <select id="sb-type">
+                        <option value="0">كتابي (Text)</option>
+                        <option value="2">صوتي (Voice)</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-blue" onclick="runSelfbot('broadcast')">📢 نشر بالرومات الموجودة</button>
+                <button class="btn btn-cyan" onclick="runSelfbot('create')">🚀 إنشاء رومات وبث الرسالة</button>
+                <button class="btn btn-red" onclick="runSelfbot('delete')">🗑️️ حذف رومات السيرفر</button>
+                <button class="btn btn-ghost" onclick="stopSelfbot()">⏹️ إيقاف العملية</button>
+
+                <div class="console-term" id="sb-log" style="height: 130px; margin-top: 10px;">
+                    <div class="log-line">> جاهز للبدء...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. POMELO HUNTER -->
+    <div id="panel-hunter" class="panel">
+        <div class="grid-box">
+            <div class="glass-card">
+                <div class="card-head">
+                    <span>إعدادات الفحص الشامل</span>
+                </div>
+
+                <div class="field">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <label style="margin:0;">توكنات الفحص (سطر لكل توكن أو مسافة):</label>
+                        <button type="button" class="eye-btn" style="position:static;" onclick="toggleVisMulti('hunt-tokens', this)">إخفاء التوكنات 👁️</button>
+                    </div>
+                    <textarea id="hunt-tokens" rows="3" placeholder="حط التوكنات هنا" class="token-field"></textarea>
+                </div>
+
+                <div class="row-2">
+                    <div class="field">
+                        <label>طول اليوزر:</label>
+                        <select id="hunt-len" onchange="renderPatterns()">
+                            <option value="5" selected>5 خانات (15 نمط)</option>
+                            <option value="4">4 خانات (14 نمط)</option>
+                            <option value="3">3 خانات (8 أنماط)</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>سرعة الفحص (ثانية):</label>
+                        <input type="number" id="hunt-delay" value="0.2" step="0.05" min="0.05">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <label style="margin:0;">الأنماط المستهدفة (حدد الأنماط اللي تبيها):</label>
+                        <div style="display:flex; gap:10px;">
+                            <span style="font-size:0.75rem; color:var(--accent); cursor:pointer; font-weight:800;" onclick="selectAllPats()">الكل</span>
+                            <span style="font-size:0.75rem; color:var(--text-muted); cursor:pointer; font-weight:800;" onclick="deselectAllPats()">إلغاء</span>
+                        </div>
+                    </div>
+                    <div class="patterns-grid" id="patterns-box"></div>
+                </div>
+
+                <button class="btn btn-cyan" id="hunt-btn" onclick="toggleHunter()">🚀 تشغيل الفحص</button>
+                <button class="btn btn-ghost" onclick="clearHuntLog()">🧹 تنظيف الشاشة</button>
+            </div>
+
+            <div class="glass-card">
+                <div class="card-head">
+                    <span>المتابعة المباشرة</span>
+                    <button type="button" class="copy-hits-btn" onclick="copyHits()">📋 نسخ الصيدات</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">صيدات (Hits)</div>
+                        <div class="stat-val c-green" id="st-hits">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">مأخوذ</div>
+                        <div class="stat-val c-red" id="st-bad">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Rate Limit</div>
+                        <div class="stat-val c-amber" id="st-rate">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">المجموع</div>
+                        <div class="stat-val c-cyan" id="st-total">0</div>
+                    </div>
+                </div>
+
+                <div style="font-size: 0.88rem; margin-bottom: 8px;">
+                    <span>اليوزر الحالي:</span> <span id="st-cur" style="color:var(--accent); font-family:var(--mono); font-weight:800;">-</span>
+                </div>
+
+                <div class="console-term" id="hunt-log">
+                    <div class="log-line">> بانتظار تشغيل الفحص...</div>
+                </div>
+
+                <div class="hits-pool" id="hits-board">
+                    الصيدات تظهر هنا مباشرة.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. CLASSIC BOT -->
+    <div id="panel-bot" class="panel">
+        <div class="grid-box">
+            <div class="glass-card">
+                <div class="card-head">
+                    <span>بيانات البوت وإعدادات الرسائل</span>
+                </div>
+
+                <div class="field">
+                    <label>توكن البوت (Bot Token):</label>
+                    <div class="input-group">
+                        <input type="password" id="bot-token" class="token-field" placeholder="Bot Token">
+                        <button type="button" class="eye-btn" onclick="toggleVisSingle('bot-token', this)">👁️</button>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>اختيار أو إدخال السيرفر:</label>
+                    <div class="input-group">
+                        <input type="text" id="bot-guild" placeholder="Server ID">
+                        <button type="button" class="btn btn-fetch" onclick="fetchGuilds('bot')">🌐 جلب السيرفرات</button>
+                    </div>
+                    <select id="bot-guilds-select" style="display:none; margin-top:8px;" onchange="document.getElementById('bot-guild').value = this.value">
+                        <option value="">-- اختر السيرفر من القائمة --</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>محتوى الرسالة:</label>
+                    <textarea id="bot-msg" rows="3">KSR ON TOP</textarea>
+                </div>
+
+                <div class="row-2">
+                    <div class="field">
+                        <label>التكرار لكل روم:</label>
+                        <input type="number" id="bot-repeat" value="5" min="1">
+                    </div>
+                    <div class="field">
+                        <label>التأخير (ثواني):</label>
+                        <input type="number" id="bot-delay" value="0.0" step="0.1" min="0">
+                    </div>
+                </div>
+
+                <div class="toggle-card">
+                    <span class="toggle-title">تيربو (أقصى سرعة):</span>
+                    <label class="switch">
+                        <input type="checkbox" id="bot-turbo" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-card">
+                    <span class="toggle-title">منشن الكل (@everyone):</span>
+                    <label class="switch">
+                        <input type="checkbox" id="bot-mention" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <div class="card-head">
+                    <span>عمليات الرومات والسجل</span>
+                </div>
+
+                <div class="row-2">
+                    <div class="field">
+                        <label>عدد الرومات:</label>
+                        <input type="number" id="bot-count" value="10" min="1">
+                    </div>
+                    <div class="field">
+                        <label>الاسم الأساسي للروم:</label>
+                        <input type="text" id="bot-prefix" value="ksr">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>نوع الروم:</label>
+                    <select id="bot-type">
+                        <option value="0">كتابي (Text Channel)</option>
+                        <option value="2">صوتي (Voice Channel)</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-blue" onclick="runBot('broadcast')">📢 بث للرومات الحالية بالبوت</button>
+                <button class="btn btn-cyan" onclick="runBot('create')">🚀 إنشاء رومات وبث الرسائل بالبوت</button>
+                <button class="btn btn-red" onclick="runBot('delete')">🗑️ مسح رومات السيرفر</button>
+                <button class="btn btn-ghost" onclick="stopBot()">⏹ إيقاف عمليات البوت</button>
+
+                <div class="console-term" id="bot-log" style="height: 145px; margin-top: 10px;">
+                    <div class="log-line">> قسم البوت جاهز للاتصال المباشر...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Developed with pride by <a href="https://www.tiktok.com/@ksrf" target="_blank" rel="noopener noreferrer">@ksrf</a>
+    </footer>
+</div>
+
+<div id="toast">تم الحفظ تلقائياً</div>
+
+<script>
+    async function discordDirect(endpoint, options = {}) {
+        const url = `https://discord.com/api/v9${endpoint}`;
+        return await fetch(url, options);
+    }
+
+    function toggleVisSingle(inputId, btn) {
+        const inp = document.getElementById(inputId);
+        if (inp.type === "password") {
+            inp.type = "text";
+            btn.innerText = "🔒";
+        } else {
+            inp.type = "password";
+            btn.innerText = "👁️";
+        }
+    }
+
+    function toggleVisMulti(areaId, btn) {
+        const area = document.getElementById(areaId);
+        if (area.style.webkitTextSecurity === "disc") {
+            area.style.webkitTextSecurity = "none";
+            btn.innerText = "إخفاء التوكنات 👁️";
+        } else {
+            area.style.webkitTextSecurity = "disc";
+            btn.innerText = "إظهار التوكنات 🔒";
+        }
+    }
+
+    function switchPanel(name, btn) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('panel-' + name).classList.add('active');
+    }
+
+    function notify(text) {
+        const t = document.getElementById('toast');
+        t.innerText = text;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    let isDesktop = true;
+    function toggleView() {
+        isDesktop = !isDesktop;
+        document.body.className = isDesktop ? 'desktop-mode' : 'mobile-mode';
+        document.getElementById('view-icon').innerText = isDesktop ? '📱' : '💻';
+        document.getElementById('view-txt').innerText = isDesktop ? 'شاشة جوال' : 'شاشة كمبيوتر';
+    }
+
+    function toggleLang() {
+        notify("الواجهة مضبوطة باللغة العربية الافتراضية");
+    }
+
+    async function fetchGuilds(type) {
+        let token = "";
+        let isBot = false;
+        let selectEl = null;
+
+        if (type === 'bot') {
+            token = document.getElementById('bot-token').value.trim();
+            isBot = true;
+            selectEl = document.getElementById('bot-guilds-select');
+        } else {
+            const raw = document.getElementById('sb-tokens').value.trim();
+            const toks = raw.split(/\s+/).filter(t => t.length > 10);
+            token = toks[0] || "";
+            isBot = false;
+            selectEl = document.getElementById('sb-guilds-select');
+        }
+
+        if (!token) {
+            notify("⚠️ أدخل التوكن أولاً!");
+            return;
+        }
+
+        let auth = token;
+        if (isBot && !auth.startsWith('Bot ')) auth = 'Bot ' + auth;
+
+        notify("⏳ جاري جلب السيرفرات...");
+        try {
+            const res = await discordDirect("/users/@me/guilds", {
+                headers: { 'Authorization': auth, 'Content-Type': 'application/json' }
+            });
+
+            if (!res.ok) {
+                if (res.status === 401) throw new Error("التوكن غير صحيح أو منتهي!");
+                if (res.status === 403) throw new Error("الحساب محظور من هذا الإجراء.");
+                throw new Error(`خطأ استجابة (${res.status}) - تأكد من صلاحيات التوكن`);
+            }
+            const guilds = await res.json();
+
+            selectEl.innerHTML = '<option value="">-- اضغط لاختيار السيرفر --</option>';
+            guilds.forEach(g => {
+                const opt = document.createElement('option');
+                opt.value = g.id;
+                opt.innerText = `🌐 ${g.name} (${g.id})`;
+                selectEl.appendChild(opt);
+            });
+
+            selectEl.style.display = 'block';
+            notify(`✅ تم العثور على ${guilds.length} سيرفر!`);
+        } catch (e) {
+            notify(`❌ ${e.message}`);
+        }
+    }
+
+    // ==========================================
+    // تحكم البوت (BOT ENGINE)
+    // ==========================================
+    let botHalt = false;
+    function logBot(msg, color = '') {
+        const b = document.getElementById('bot-log');
+        const d = document.createElement('div');
+        d.className = 'log-line';
+        if (color) d.style.color = color;
+        d.innerText = `> ${msg}`;
+        b.appendChild(d);
+        b.scrollTop = b.scrollHeight;
+    }
+
+    function stopBot() {
+        botHalt = true;
+        logBot("🛑 تم إيقاف عمليات البوت.", "var(--red)");
+        notify("تم إيقاف البوت");
+    }
+
+    async function runBot(act) {
+        botHalt = false;
+        let token = document.getElementById('bot-token').value.trim();
+        const guildId = document.getElementById('bot-guild').value.trim();
+        const msgRaw = document.getElementById('bot-msg').value.trim();
+        const count = parseInt(document.getElementById('bot-count').value) || 10;
+        const prefix = document.getElementById('bot-prefix').value.trim() || 'ksr';
+        const repeat = parseInt(document.getElementById('bot-repeat').value) || 1;
+        const delay = (parseFloat(document.getElementById('bot-delay').value) || 0) * 1000;
+        const turbo = document.getElementById('bot-turbo').checked;
+        const mention = document.getElementById('bot-mention').checked;
+        const chType = parseInt(document.getElementById('bot-type').value);
+
+        if (!token || !guildId) {
+            notify("⚠️ توكن البوت وآيدي السيرفر مطلوبين!");
+            return;
+        }
+
+        if (!token.startsWith('Bot ')) token = 'Bot ' + token;
+        const headers = { 'Authorization': token, 'Content-Type': 'application/json' };
+        const msg = mention && msgRaw ? `@everyone ${msgRaw}` : (msgRaw || "@everyone");
+
+        try {
+            if (act === 'broadcast') {
+                logBot("⏳ جاري جلب الرومات للبث...");
+                const r = await discordDirect(`/guilds/${guildId}/channels`, { headers });
+                if (!r.ok) {
+                    const errJson = await r.json().catch(() => ({}));
+                    throw new Error(errJson.message || `خطأ استجابة (${r.status})`);
+                }
+                const channels = await r.json();
+                const textChs = channels.filter(c => c.type === 0);
+                logBot(`📢 وجدنا ${textChs.length} روم كتابي. جاري البث...`, "var(--accent)");
+
+                for (const ch of textChs) {
+                    if (botHalt) break;
+                    for (let i = 0; i < repeat; i++) {
+                        if (botHalt) break;
+                        discordDirect(`/channels/${ch.id}/messages`, {
+                            method: 'POST',
+                            headers,
+                            body: JSON.stringify({ content: msg })
+                        });
+                        if (!turbo && delay > 0) await new Promise(res => setTimeout(res, delay));
+                    }
+                }
+                logBot("✅ انتهى البث بالكامل.", "var(--green)");
+            }
+            else if (act === 'create') {
+                logBot(`⏳ جاري إنشاء ${count} روم وبث الرسائل...`);
+                let created = 0;
+                for (let i = 0; i < count; i++) {
+                    if (botHalt) break;
+                    const r = await discordDirect(`/guilds/${guildId}/channels`, {
+                        method: 'POST',
+                        headers,
+                        body: JSON.stringify({ name: `${prefix}-${i+1}`, type: chType })
+                    });
+
+                    if (r.ok) {
+                        created++;
+                        const ch = await r.json();
+                        logBot(`➕ تم إنشاء: #${ch.name}`, "var(--accent)");
+                        if (chType === 0 && msg) {
+                            for (let j = 0; j < repeat; j++) {
+                                discordDirect(`/channels/${ch.id}/messages`, {
+                                    method: 'POST',
+                                    headers,
+                                    body: JSON.stringify({ content: msg })
+                                });
+                            }
+                        }
+                    } else {
+                        const errData = await r.json().catch(() => ({}));
+                        if (r.status === 403) {
+                            logBot(`❌ البوت يفتقر لرتبة Manage Channels بالسيرفر!`, "var(--red)");
+                            break;
+                        } else if (r.status === 429) {
+                            logBot(`⚠️ واجهت Rate Limit، جاري التهدئة...`, "var(--amber)");
+                            await new Promise(res => setTimeout(res, 2000));
+                        } else {
+                            logBot(`❌ فشل إنشاء الروم: ${errData.message || r.statusText}`, "var(--red)");
+                        }
+                    }
+                    if (!turbo && delay > 0) await new Promise(res => setTimeout(res, delay));
+                }
+                logBot(`🎉 تم إنشاء ${created} روم بنجاح.`, "var(--green)");
+            }
+            else if (act === 'delete') {
+                logBot("⚠️ جاري جلب الرومات لمسحها...");
+                const r = await discordDirect(`/guilds/${guildId}/channels`, { headers });
+                const channels = await r.json();
+                for (const ch of channels) {
+                    if (botHalt) break;
+                    await discordDirect(`/channels/${ch.id}`, { method: 'DELETE', headers });
+                    logBot(`🗑️ تم مسح: ${ch.name}`);
+                    if (!turbo && delay > 0) await new Promise(res => setTimeout(res, delay));
+                }
+                logBot("✅ اكتمل حذف الرومات.", "var(--green)");
+            }
+        } catch (e) {
+            logBot(`❌ خطأ أثناء العملية: ${e.message}`, "var(--red)");
+        }
+    }
+
+    // ==========================================
+    // تحكم السيلف بوت (SELFBOT)
+    // ==========================================
+    let sbHalt = false;
+    function logSb(msg) {
+        const b = document.getElementById('sb-log');
+        const d = document.createElement('div');
+        d.className = 'log-line';
+        d.innerText = `> ${msg}`;
+        b.appendChild(d);
+        b.scrollTop = b.scrollHeight;
+    }
+
+    function stopSelfbot() {
+        sbHalt = true;
+        logSb("تم الإيقاف.");
+        notify("تم إيقاف العمليات");
+    }
+
+    async function runSelfbot(act) {
+        sbHalt = false;
+        const rawTokens = document.getElementById('sb-tokens').value.trim();
+        const tokens = rawTokens.split(/\s+/).filter(t => t.length > 10);
+        const guildId = document.getElementById('sb-guild').value.trim();
+        const msgRaw = document.getElementById('sb-msg').value.trim();
+        const repeat = parseInt(document.getElementById('sb-repeat').value) || 1;
+        const delay = (parseFloat(document.getElementById('sb-delay').value) || 0) * 1000;
+        const turbo = document.getElementById('sb-turbo').checked;
+        const mention = document.getElementById('sb-mention').checked;
+        const prefix = document.getElementById('sb-prefix').value.trim() || 'ksr';
+        const count = parseInt(document.getElementById('sb-count').value) || 5;
+        const chType = parseInt(document.getElementById('sb-type').value);
+
+        if (!tokens.length || !guildId) {
+            notify("⚠️ أدخل توكن واحد وآيدي السيرفر!");
+            return;
+        }
+
+        const msg = mention && msgRaw ? `@everyone ${msgRaw}` : (msgRaw || "@everyone");
+        let tIdx = 0;
+        const getToken = () => tokens[tIdx++ % tokens.length];
+
+        try {
+            if (act === 'broadcast') {
+                logSb(`جاري فحص الرومات بـ ${tokens.length} توكن...`);
+                const r = await discordDirect(`/guilds/${guildId}/channels`, {
+                    headers: { 'Authorization': tokens[0], 'Content-Type': 'application/json' }
+                });
+                if (!r.ok) throw new Error("التوكن أو آيدي السيرفر غير صحيح");
+                const channels = await r.json();
+                const textChs = channels.filter(c => c.type === 0);
+                logSb(`وجدت ${textChs.length} روم. جاري البث...`);
+
+                for (const ch of textChs) {
+                    if (sbHalt) break;
+                    for (let i = 0; i < repeat; i++) {
+                        if (sbHalt) break;
+                        discordDirect(`/channels/${ch.id}/messages`, {
+                            method: 'POST',
+                            headers: { 'Authorization': getToken(), 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ content: msg })
+                        });
+                        if (!turbo && delay > 0) await new Promise(r => setTimeout(r, delay));
+                    }
+                }
+                logSb("انتهى البث.");
+            }
+            else if (act === 'create') {
+                logSb(`جاري إنشاء ${count} روم...`);
+                for (let i = 0; i < count; i++) {
+                    if (sbHalt) break;
+                    const r = await discordDirect(`/guilds/${guildId}/channels`, {
+                        method: 'POST',
+                        headers: { 'Authorization': getToken(), 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: `${prefix}-${i+1}`, type: chType })
+                    });
+                    if (r.ok) {
+                        const newCh = await r.json();
+                        logSb(`تم إنشاء: #${newCh.name}`);
+                        if (chType === 0 && msg) {
+                            for (let j = 0; j < repeat; j++) {
+                                discordDirect(`/channels/${newCh.id}/messages`, {
+                                    method: 'POST',
+                                    headers: { 'Authorization': getToken(), 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ content: msg })
+                                });
+                            }
+                        }
+                    }
+                    if (!turbo && delay > 0) await new Promise(r => setTimeout(r, delay));
+                }
+                logSb("اكتمل إنشاء الرومات.");
+            }
+            else if (act === 'delete') {
+                logSb("جاري حذف الرومات...");
+                const r = await discordDirect(`/guilds/${guildId}/channels`, {
+                    headers: { 'Authorization': tokens[0], 'Content-Type': 'application/json' }
+                });
+                const channels = await r.json();
+                for (const ch of channels) {
+                    if (sbHalt) break;
+                    await discordDirect(`/channels/${ch.id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': getToken(), 'Content-Type': 'application/json' }
+                    });
+                    logSb(`تم حذف: ${ch.name}`);
+                    if (!turbo && delay > 0) await new Promise(r => setTimeout(r, delay));
+                }
+                logSb("انتهى الحذف.");
+            }
+        } catch (e) {
+            logSb(`خطأ: ${e.message}`);
+        }
+    }
+
+    // ==========================================
+    // صيد وفحص اليوزرات (POMELO HUNTER)
+    // ==========================================
+    const PATTERNS_COMPREHENSIVE = {
+        5: [
+            { id: "1", label: "_abcd (مثل: _hsyt)" }, { id: "2", label: "abcd_ (مثل: hsyt_)" },
+            { id: "3", label: "_1234 (مثل: _2542)" }, { id: "4", label: "1234_ (مثل: 2542_)" },
+            { id: "5", label: "ab_cd (مثل: ks_rf)" }, { id: "6", label: "ab.cd (مثل: ks.rf)" },
+            { id: "7", label: ".abcd (مثل: .hsyt)" }, { id: "8", label: "abcd. (مثل: hsyt.)" },
+            { id: "9", label: "aaaa1 (مثل: aaaa1)" }, { id: "10", label: "1aaaa (مثل: 1aaaa)" },
+            { id: "11", label: "aaaab (مثل: aaaab)" }, { id: "12", label: "aa111 (مثل: aa111)" },
+            { id: "13", label: "a1111 (مثل: a7777)" }, { id: "14", label: "a_bbb (مثل: k_sss)" },
+            { id: "15", label: "عشوائي كامل (x9_k2)" }
+        ],
+        4: [
+            { id: "1", label: "a.bc (مثل: y.tr)" }, { id: "2", label: "_abc (مثل: _ksr)" },
+            { id: "3", label: "abc_ (مثل: ksr_)" }, { id: "4", label: ".abc (مثل: .ksr)" },
+            { id: "5", label: "a_bb (مثل: k_ss)" }, { id: "6", label: "aa_b (مثل: kk_s)" },
+            { id: "7", label: "aa11 (مثل: ks11)" }, { id: "8", label: "11aa (مثل: 99ks)" },
+            { id: "9", label: "111a (مثل: 777k)" }, { id: "10", label: "a111 (مثل: k777)" },
+            { id: "11", label: "aaab (مثل: kkks)" }, { id: "12", label: "abab (مثل: ksks)" },
+            { id: "13", label: "abba (مثل: kssk)" }, { id: "14", label: "عشوائي كامل (k8_z)" }
+        ],
+        3: [
+            { id: "1", label: "a_b (مثل: k_s)" }, { id: "2", label: "a.b (مثل: k.s)" },
+            { id: "3", label: "_ab (مثل: _ks)" }, { id: "4", label: "ab_ (مثل: ks_)" },
+            { id: "5", label: "aab (مثل: kks)" }, { id: "6", label: "a11 (مثل: k77)" },
+            { id: "7", label: "11a (مثل: 77k)" }, { id: "8", label: "عشوائي كامل (k9_)" }
+        ]
+    };
+
+    let selectedPatterns = ["1"];
+
+    function renderPatterns() {
+        const len = document.getElementById('hunt-len').value;
+        const box = document.getElementById('patterns-box');
+        box.innerHTML = '';
+        selectedPatterns = ["1"];
+
+        (PATTERNS_COMPREHENSIVE[len] || []).forEach(p => {
+            const chip = document.createElement('div');
+            chip.className = `pat-chip ${selectedPatterns.includes(p.id) ? 'active' : ''}`;
+            chip.onclick = () => togglePat(p.id, chip);
+            chip.innerHTML = `<span>${p.label}</span><span class="chk">${selectedPatterns.includes(p.id) ? '✓' : ''}</span>`;
+            box.appendChild(chip);
+        });
+    }
+
+    function togglePat(id, el) {
+        if (selectedPatterns.includes(id)) {
+            if (selectedPatterns.length > 1) {
+                selectedPatterns = selectedPatterns.filter(x => x !== id);
+                el.classList.remove('active');
+                el.querySelector('.chk').innerText = '';
+            }
+        } else {
+            selectedPatterns.push(id);
+            el.classList.add('active');
+            el.querySelector('.chk').innerText = '✓';
+        }
+    }
+
+    function selectAllPats() {
+        const len = document.getElementById('hunt-len').value;
+        selectedPatterns = (PATTERNS_COMPREHENSIVE[len] || []).map(p => p.id);
+        document.querySelectorAll('.pat-chip').forEach(el => {
+            el.classList.add('active');
+            el.querySelector('.chk').innerText = '✓';
+        });
+    }
+
+    function deselectAllPats() {
+        selectedPatterns = ["1"];
+        document.querySelectorAll('.pat-chip').forEach(el => {
+            el.classList.remove('active');
+            el.querySelector('.chk').innerText = '';
+        });
+        const first = document.querySelector('.pat-chip');
+        if (first) {
+            first.classList.add('active');
+            first.querySelector('.chk').innerText = '✓';
+        }
+    }
+    renderPatterns();
+
+    let hunting = false;
+    let hHits = 0, hBad = 0, hRate = 0, hTotal = 0;
+    const hitList = [];
+
+    function logHunt(txt, type = '') {
+        const b = document.getElementById('hunt-log');
+        const d = document.createElement('div');
+        d.className = `log-line ${type}`;
+        d.innerText = `> ${txt}`;
+        b.appendChild(d);
+        b.scrollTop = b.scrollHeight;
+    }
+
+    function clearHuntLog() {
+        document.getElementById('hunt-log').innerHTML = '';
+    }
+
+    function copyHits() {
+        if (!hitList.length) {
+            notify("⚠️ لا توجد صيدات لنسخها حالياً!");
+            return;
+        }
+        const textToCopy = hitList.map(u => `@${u}`).join('\n') + '\n---\nKSR | @ksrf';
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            notify("📋 تم نسخ جميع الصيدات وحقوق KSR بنجاح!");
+        }).catch(() => {
+            notify("❌ تعذر النسخ للحافظة.");
+        });
+    }
+
+    function genUser(len, patId) {
+        const c = "abcdefghijklmnopqrstuvwxyz";
+        const d = "0123456789";
+        const rc = () => c[Math.floor(Math.random() * c.length)];
+        const rd = () => d[Math.floor(Math.random() * d.length)];
+
+        const c1 = rc(), c2 = rc(), c3 = rc(), c4 = rc();
+        const d1 = rd(), d2 = rd(), d3 = rd(), d4 = rd();
+
+        if (len === 5) {
+            const w = `${c1}${c2}${c3}${c4}`;
+            const num_w = `${d1}${d2}${d3}${d4}`;
+            const map5 = {
+                "1": `_${w}`, "2": `${w}_`, "3": `_${num_w}`, "4": `${num_w}_`,
+                "5": `${c1}${c2}_${c3}${c4}`, "6": `${c1}${c2}.${c3}${c4}`,
+                "7": `.${w}`, "8": `${w}.`, "9": `${c1}${c1}${c1}${c1}${d1}`,
+                "10": `${d1}${c1}${c1}${c1}${c1}`, "11": `${c1}${c1}${c1}${c1}${c2}`,
+                "12": `${c1}${c1}${d1}${d1}${d1}`, "13": `${c1}${d1}${d1}${d1}${d1}`,
+                "14": `${c1}_${c2}${c2}${c2}`,
+                "15": Array.from({length: 5}, () => (c + d + "._")[Math.floor(Math.random() * (c.length + d.length + 2))]).join('')
+            };
+            return map5[patId] || `_${w}`;
+        }
+        if (len === 4) {
+            const map4 = {
+                "1": `${c1}.${c2}${c3}`, "2": `_${c1}${c2}${c3}`, "3": `${c1}${c2}${c3}_`,
+                "4": `.${c1}${c2}${c3}`, "5": `${c1}_${c2}${c2}`, "6": `${c1}${c1}_${c2}`,
+                "7": `${c1}${c1}${d1}${d1}`, "8": `${d1}${d1}${c1}${c1}`, "9": `${d1}${d1}${d1}${c1}`,
+                "10": `${c1}${d1}${d1}${d1}`, "11": `${c1}${c1}${c1}${c2}`, "12": `${c1}${c2}${c1}${c2}`,
+                "13": `${c1}${c2}${c2}${c1}`,
+                "14": Array.from({length: 4}, () => (c + d + "._")[Math.floor(Math.random() * (c.length + d.length + 2))]).join('')
+            };
+            return map4[patId] || `${c1}.${c2}${c3}`;
+        }
+        if (len === 3) {
+            const map3 = {
+                "1": `${c1}_${c2}`, "2": `${c1}.${c2}`, "3": `_${c1}${c2}`,
+                "4": `${c1}${c2}_`, "5": `${c1}${c1}${c2}`, "6": `${c1}${d1}${d1}`,
+                "7": `${d1}${d1}${c1}`,
+                "8": Array.from({length: 3}, () => (c + d + "._")[Math.floor(Math.random() * (c.length + d.length + 2))]).join('')
+            };
+            return map3[patId] || `${c1}_${c2}`;
+        }
+        return rc() + rc() + rc() + rc() + rc();
+    }
+
+    async function toggleHunter() {
+        const btn = document.getElementById('hunt-btn');
+        if (hunting) {
+            hunting = false;
+            btn.innerText = "🚀 تشغيل الفحص";
+            btn.className = "btn btn-cyan";
+            logHunt("تم إيقاف الفحص.");
+            return;
+        }
+
+        const raw = document.getElementById('hunt-tokens').value.trim();
+        const tokens = raw.split(/\s+/).filter(t => t.length > 10);
+        if (!tokens.length) {
+            notify("⚠️ حط توكن حساب واحد على الأقل!");
+            return;
+        }
+
+        hunting = true;
+        btn.innerText = "⏹️ إيقاف الفحص";
+        btn.className = "btn btn-red";
+        logHunt("بدأ الفحص الآن...", "log-hit");
+
+        const len = parseInt(document.getElementById('hunt-len').value);
+        const delay = Math.max(50, (parseFloat(document.getElementById('hunt-delay').value) || 0.2) * 1000);
+        let tIdx = 0;
+
+        while (hunting) {
+            const token = tokens[tIdx % tokens.length];
+            tIdx++;
+
+            const currentPattern = selectedPatterns[Math.floor(Math.random() * selectedPatterns.length)];
+            const username = genUser(len, currentPattern);
+            document.getElementById('st-cur').innerText = `@${username}`;
+            hTotal++;
+
+            try {
+                const res = await discordDirect("/users/@me/pomelo-attempt", {
+                    method: "POST",
+                    headers: { "Authorization": token, "Content-Type": "application/json" },
+                    body: JSON.stringify({ username })
+                });
+
+                if (res.status === 200) {
+                    const data = await res.json();
+                    if (!data.taken) {
+                        hHits++;
+                        hitList.push(username);
+                        logHunt(`HIT: @${username}`, "log-hit");
+                        document.getElementById('hits-board').innerHTML = hitList.map(u => `<div>HIT: @${u}</div>`).join('');
+                    } else {
+                        hBad++;
+                        logHunt(`❌ مأخوذ: @${username}`, "log-bad");
+                    }
+                } else if (res.status === 429) {
+                    hRate++;
+                    logHunt(`⚠️ توقف مؤقت (Rate Limit)`, "log-rate");
+                    await new Promise(r => setTimeout(r, 1500));
+                }
+            } catch (e) {
+                logHunt(`⚠️ مشكلة شبكة أو قيود بالمتصفح`, "log-rate");
+                await new Promise(r => setTimeout(r, 1000));
+            }
+
+            document.getElementById('st-hits').innerText = hHits;
+            document.getElementById('st-bad').innerText = hBad;
+            document.getElementById('st-rate').innerText = hRate;
+            document.getElementById('st-total').innerText = hTotal;
+
+            await new Promise(r => setTimeout(r, delay));
+        }
+    }
+</script>
+
+</body>
+</html>
